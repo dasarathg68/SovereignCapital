@@ -31,6 +31,10 @@ const config: HardhatUserConfig = {
     },
   },
   networks: {
+    sepolia: {
+      accounts: [process.env.PRIVATE_KEY_LOCALHOST as any],
+      url: process.env.SEPOLIA_URL,
+    },
     galadriel: {
       chainId: 696969,
       url: "https://devnet.galadriel.com/",
