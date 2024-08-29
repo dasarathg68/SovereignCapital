@@ -1,10 +1,23 @@
 "use client";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import TokenSwap from "./Swap";
 
 export const NavBar = () => {
   const router = useRouter();
+  const [theme, setTheme] = useState(
+    JSON.parse(localStorage.getItem("theme") || "lofi")
+  );
+
+  useEffect(() => {
+    const savedTheme = JSON.parse(localStorage.getItem("theme") || "lofi");
+    setTheme(savedTheme);
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("theme", JSON.stringify(theme));
+  }, [theme]);
 
   return (
     <div className="navbar bg-base-100 shadow-lg z-50 fixed flex justify-center items-center">
@@ -88,73 +101,30 @@ export const NavBar = () => {
               tabIndex={0}
               className="dropdown-content menu bg-base-100 rounded-box z-[1] w-auto shadow"
             >
-              <div className="form-control">
-                <label className="label cursor-pointer gap-4">
-                  <span className="label-text">Retro</span>
-                  <input
-                    type="radio"
-                    name="theme-radios"
-                    className="radio hidden theme-controller "
-                    value="retro"
-                  />
-                </label>
-              </div>
-              <div className="form-control">
-                <label className="label cursor-pointer gap-4">
-                  <span className="label-text">Cyberpunk</span>
-                  <input
-                    type="radio"
-                    name="theme-radios"
-                    className="radio hidden theme-controller "
-                    value="cyberpunk"
-                  />
-                </label>
-              </div>
-              <div className="form-control">
-                <label className="label cursor-pointer gap-4">
-                  <span className="label-text">Lofi</span>
-                  <input
-                    type="radio"
-                    name="theme-radios"
-                    className="radio hidden theme-controller "
-                    value="lofi"
-                  />
-                </label>
-              </div>
-
-              <div className="form-control">
-                <label className="label cursor-pointer gap-4">
-                  <span className="label-text">Cupcake</span>
-                  <input
-                    type="radio"
-                    name="theme-radios"
-                    className="radio hidden theme-controller "
-                    value="cupcake"
-                  />
-                </label>
-              </div>
-              <div className="form-control">
-                <label className="label cursor-pointer gap-4">
-                  <span className="label-text">Synthwave</span>
-                  <input
-                    type="radio"
-                    name="theme-radios"
-                    className="radio hidden theme-controller "
-                    value="synthwave"
-                  />
-                </label>
-              </div>
-              <div className="form-control">
-                <label className="label cursor-pointer gap-4">
-                  <span className="label-text">Garden</span>
-                  <input
-                    type="radio"
-                    name="theme-radios"
-                    className="radio hidden theme-controller "
-                    value="garden"
-                  />
-                </label>
-              </div>
+              {[
+                "retro",
+                "cyberpunk",
+                "lofi",
+                "cupcake",
+                "synthwave",
+                "garden",
+              ].map((currentTheme) => (
+                <div key={currentTheme} className="form-control">
+                  <label className="label cursor-pointer gap-4">
+                    <span className="label-text capitalize">
+                      {currentTheme}
+                    </span>
+                    <input
+                      type="radio"
+                      name="theme-radios"
+                      checked={theme === currentTheme}
+                      onChange={() => setTheme(currentTheme)}
+                      className="radio hidden theme-controller "
+                      value={currentTheme}
+                    />
+                  </label>
+                </div>
+              ))}
             </div>
           </div>
         </div>
