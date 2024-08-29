@@ -1,6 +1,7 @@
 "use client";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useRouter } from "next/navigation";
+import TokenSwap from "./Swap";
 
 export const NavBar = () => {
   const router = useRouter();
@@ -58,6 +59,25 @@ export const NavBar = () => {
             largeScreen: "full",
           }}
         />
+        <dialog id="my_modal_3" className="modal">
+          <div className="modal-box bg-base-200">
+            <form method="dialog">
+              <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
+                ✕
+              </button>
+            </form>
+            <TokenSwap />
+          </div>
+        </dialog>
+        <button
+          className="btn btn-primary btn-sm ml-4 mr-4"
+          onClick={() =>
+            (document.getElementById("my_modal_3") as any).showModal()
+          }
+        >
+          Swap
+        </button>
+
         <div className="dropdown dropdown-end lg:flex hidden">
           <div className="dropdown">
             <div tabIndex={0} role="button" className="btn btn-ghost">
