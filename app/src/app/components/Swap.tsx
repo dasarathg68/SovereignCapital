@@ -17,7 +17,6 @@ const TokenSwap = () => {
   return (
     <div className="max-w-lg mx-auto p-4 bg-base-200 rounded-lg ">
       <div className="flex justify-center text-xl pb-2">Swap Tokens</div>
-      <hr />
       <div className="flex items-center justify-between bg-base-200 p-4 rounded-lg border border-primary w-full">
         <div>
           <input
@@ -94,9 +93,7 @@ const TokenSwap = () => {
         </div>
       </div>
       <div className="mt-4">
-        <button className="btn btn-accent w-full text-lg py-3 rounded-lg">
-          Swap
-        </button>
+        <button className="btn btn-primary w-full text-lg py-3 ">Swap</button>
       </div>
     </div>
   );
