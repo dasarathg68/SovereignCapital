@@ -8,12 +8,13 @@ import {
 import { useSwitchChain } from "wagmi";
 
 const TokenSwap = () => {
-  const { sendTransaction } = useSendTransaction();
+  const { sendTransaction, isSuccess, isError } = useSendTransaction();
   const { switchChain, status: switchStatus } = useSwitchChain();
+  const [isSwapping, setIsSwapping] = useState(false);
 
   const [token1, setToken1] = useState("");
   const [token2, setToken2] = useState("");
-  const [selectedToken1, setSelectedToken1] = useState("ETH");
+  const [selectedToken1, setSelectedToken1] = useState("SepETH");
   const [selectedToken2, setSelectedToken2] = useState("GAL");
 
   const handleSwitch = () => {
@@ -38,6 +39,16 @@ const TokenSwap = () => {
       }
     }
   }, [switchStatus]);
+  useEffect(() => {
+    if (isSuccess) {
+      setIsSwapping(false);
+    }
+  }, [isSuccess]);
+  useEffect(() => {
+    if (isError) {
+      setIsSwapping(false);
+    }
+  }, [isError]);
   return (
     <div className="max-w-lg mx-auto p-4 bg-base-200 rounded-lg ">
       <div className="flex justify-center text-xl pb-2">Swap Tokens</div>
@@ -120,7 +131,7 @@ const TokenSwap = () => {
         <button
           className="btn btn-primary w-full text-lg py-3 "
           onClick={() => {
-            console.log(selectedToken1);
+            setIsSwapping(true);
             if (selectedToken1 == "SepETH") {
               switchChain({ chainId: 11155111 });
               sendTransaction({
@@ -136,7 +147,11 @@ const TokenSwap = () => {
             }
           }}
         >
-          Swap
+          {isSwapping ? (
+            <span className="loading loading-spinner loading-sm text-white"></span>
+          ) : (
+            "Swap"
+          )}
         </button>
       </div>
     </div>
