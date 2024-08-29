@@ -1,6 +1,16 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useSendTransaction } from "wagmi";
+import { parseEther } from "viem";
+import {
+  galadrielBridgeAddress,
+  sepoliaBridgeAddress,
+} from "../utils/constants";
+import { useSwitchChain } from "wagmi";
 
 const TokenSwap = () => {
+  const { sendTransaction } = useSendTransaction();
+  const { switchChain, status: switchStatus } = useSwitchChain();
+
   const [token1, setToken1] = useState("");
   const [token2, setToken2] = useState("");
   const [selectedToken1, setSelectedToken1] = useState("ETH");
@@ -13,7 +23,21 @@ const TokenSwap = () => {
     setSelectedToken1(selectedToken2);
     setSelectedToken2(selectedToken1);
   };
-
+  useEffect(() => {
+    if (switchStatus === "success") {
+      if (selectedToken1 == "SepETH") {
+        sendTransaction({
+          to: sepoliaBridgeAddress,
+          value: parseEther(token1),
+        });
+      } else if (selectedToken1 == "GAL") {
+        sendTransaction({
+          to: galadrielBridgeAddress,
+          value: parseEther(token1),
+        });
+      }
+    }
+  }, [switchStatus]);
   return (
     <div className="max-w-lg mx-auto p-4 bg-base-200 rounded-lg ">
       <div className="flex justify-center text-xl pb-2">Swap Tokens</div>
@@ -41,7 +65,7 @@ const TokenSwap = () => {
             onChange={(e) => setSelectedToken1(e.target.value)}
           >
             <option value="GAL">GAL</option>
-            <option value="ETH">SepETH</option>
+            <option value="SepETH">SepETH</option>
           </select>
         </div>
       </div>
@@ -87,13 +111,33 @@ const TokenSwap = () => {
             value={selectedToken2}
             onChange={(e) => setSelectedToken2(e.target.value)}
           >
-            <option value="ETH">SepETH</option>
+            <option value="SepETH">SepETH</option>
             <option value="GAL">GAL</option>
           </select>
         </div>
       </div>
       <div className="mt-4">
-        <button className="btn btn-primary w-full text-lg py-3 ">Swap</button>
+        <button
+          className="btn btn-primary w-full text-lg py-3 "
+          onClick={() => {
+            console.log(selectedToken1);
+            if (selectedToken1 == "SepETH") {
+              switchChain({ chainId: 11155111 });
+              sendTransaction({
+                to: sepoliaBridgeAddress,
+                value: parseEther(token1),
+              });
+            } else if (selectedToken1 == "GAL") {
+              switchChain({ chainId: 696969 });
+              sendTransaction({
+                to: galadrielBridgeAddress,
+                value: parseEther(token1),
+              });
+            }
+          }}
+        >
+          Swap
+        </button>
       </div>
     </div>
   );
