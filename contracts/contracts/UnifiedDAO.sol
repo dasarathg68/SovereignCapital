@@ -6,8 +6,8 @@ import './Types.sol';
 
 contract UnifiedDAO {
 
-    mapping(uint256 => DAO) public daos;
-    mapping(bytes32 => LiquidityPool) public pools;
+    mapping(uint256 => Types.DAO) public daos;
+    mapping(bytes32 => Types.LiquidityPool) public pools;
     uint256 public daoCount;
     
     event DAOCreated(uint256 daoId, string name, string mission, string goals);
@@ -26,7 +26,7 @@ contract UnifiedDAO {
         address[] memory initialMembers
     ) external {
         uint256 daoId = daoCount++;
-        DAO storage dao = daos[daoId];
+        Types.DAO storage dao = daos[daoId];
         dao.name = name;
         dao.mission = mission;
         dao.goals = goals;
@@ -35,7 +35,7 @@ contract UnifiedDAO {
         // Add initial members
         for (uint256 i = 0; i < initialMembers.length; i++) {
             address member = initialMembers[i];
-            dao.users[member] = User({
+            dao.users[member] = Types.User({
                 votingPower: 0,
                 isShareholder: true,
                 tasksCompleted: 0,
@@ -49,15 +49,15 @@ contract UnifiedDAO {
     }
 
     function createProposal(uint256 daoId, string memory description) external {
-        DAO storage dao = daos[daoId];
+        Types.DAO storage dao = daos[daoId];
         uint256 proposalId = dao.proposalCount++;
         uint256 aiScore = calculateAIScore(description, dao.mission, dao.goals);
-        dao.proposals[proposalId] = Proposal(proposalId, description, aiScore, 0, false);
+        dao.proposals[proposalId] = Types.Proposal(proposalId, description, aiScore, 0, false);
         emit ProposalCreated(daoId, proposalId, description, aiScore);
     }
 
     function vote(uint256 daoId, uint256 proposalId, uint256 amount) external {
-        DAO storage dao = daos[daoId];
+        Types.DAO storage dao = daos[daoId];
         require(dao.users[msg.sender].isShareholder, "User not a shareholder");
         require(!dao.proposals[proposalId].executed, "Proposal already executed");
         
@@ -67,8 +67,8 @@ contract UnifiedDAO {
     }
 
     function executeProposal(uint256 daoId, uint256 proposalId) external {
-        DAO storage dao = daos[daoId];
-        Proposal storage proposal = dao.proposals[proposalId];
+        Types.DAO storage dao = daos[daoId];
+        Types.Proposal storage proposal = dao.proposals[proposalId];
         require(!proposal.executed, "Proposal already executed");
         require(proposal.votes > 0, "No votes for this proposal");
 
@@ -81,7 +81,7 @@ contract UnifiedDAO {
     // DEX Integration Functions
     function addLiquidity(uint256 daoId, address tokenA, address tokenB, uint256 amountA, uint256 amountB) external {
         bytes32 poolId = keccak256(abi.encodePacked(daoId, tokenA, tokenB));
-        LiquidityPool storage pool = pools[poolId];
+        Types.LiquidityPool storage pool = pools[poolId];
         
         if (pool.tokenA == address(0) && pool.tokenB == address(0)) {
             pool.tokenA = tokenA;
@@ -101,7 +101,7 @@ contract UnifiedDAO {
     
     function swap(uint256 daoId, address tokenA, address tokenB, uint256 amountA) external {
         bytes32 poolId = keccak256(abi.encodePacked(daoId, tokenA, tokenB));
-        LiquidityPool storage pool = pools[poolId];
+        Types.LiquidityPool storage pool = pools[poolId];
         
         require(pool.reserveA > 0 && pool.reserveB > 0, "Insufficient liquidity");
 
