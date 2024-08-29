@@ -2,9 +2,13 @@
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+
 import TokenSwap from "./Swap";
+import { useAccount } from "wagmi";
 
 export const NavBar = () => {
+  const { address, isConnected } = useAccount();
+
   const router = useRouter();
   const [theme, setTheme] = useState(
     JSON.parse(localStorage.getItem("theme") || "lofi")
@@ -82,14 +86,20 @@ export const NavBar = () => {
             <TokenSwap />
           </div>
         </dialog>
-        <button
-          className="btn btn-primary btn-sm ml-2"
-          onClick={() =>
-            (document.getElementById("my_modal_3") as any).showModal()
-          }
-        >
-          Swap
-        </button>
+        {isConnected ? (
+          <>
+            <button
+              className="btn btn-primary btn-sm ml-2"
+              onClick={() =>
+                (document.getElementById("my_modal_3") as any).showModal()
+              }
+            >
+              Swap
+            </button>
+          </>
+        ) : (
+          <></>
+        )}
 
         <div className="dropdown dropdown-end lg:flex hidden">
           <div className="dropdown">
