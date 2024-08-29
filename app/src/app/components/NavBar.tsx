@@ -10,9 +10,7 @@ export const NavBar = () => {
   const { address, isConnected } = useAccount();
 
   const router = useRouter();
-  const [theme, setTheme] = useState(
-    JSON.parse(localStorage.getItem("theme") || "lofi")
-  );
+  const [theme, setTheme] = useState(null);
 
   useEffect(() => {
     const savedTheme = JSON.parse(localStorage.getItem("theme") || "lofi");
@@ -20,7 +18,8 @@ export const NavBar = () => {
   }, []);
 
   useEffect(() => {
-    localStorage.setItem("theme", JSON.stringify(theme));
+    if (theme !== null && theme !== undefined)
+      localStorage.setItem("theme", JSON.stringify(theme));
   }, [theme]);
 
   return (
