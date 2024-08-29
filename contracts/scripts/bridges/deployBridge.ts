@@ -1,17 +1,13 @@
-// scripts/deploy.js
 import { ethers } from "hardhat";
 async function main() {
   const [deployer] = await ethers.getSigners();
 
   console.log("Deploying contracts with the account:", deployer.address);
 
-  const SepoliaBridge = await ethers.getContractFactory("SepoliaBridge");
-  const sepoliaBridge = await SepoliaBridge.deploy();
+  const Bridge = await ethers.getContractFactory("Bridge");
+  const bridge = await Bridge.deploy();
 
-  console.log(
-    "SepoliaBridge contract deployed to:",
-    await sepoliaBridge.getAddress()
-  );
+  console.log("Bridge contract deployed to:", await bridge.getAddress());
 }
 
 main()

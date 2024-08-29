@@ -1,13 +1,12 @@
 import { ethers } from "ethers";
-import GaladrielBridgeABI from "../../artifacts/contracts/bridges/GaladrielBridge.sol/GaladrielBridge.json";
-import SepoliaBridgeABI from "../../artifacts/contracts/bridges/SepoliaBridge.sol/SepoliaBridge.json";
+import BridgeABI from "../../artifacts/contracts/bridges/Bridge.sol/Bridge.json";
 import dotenv from "dotenv";
 
 dotenv.config();
 
 async function main() {
-  const sepoliaBridgeAddress = "0x370C7F7DB87124B4056b6bC986215718E521a997";
-  const galadrielBridgeAddress = "0xDdeFb0A59A25b4554EfEb4Ba7Cc7bb3535b49600";
+  const sepoliaBridgeAddress = "0x45b62FDc67a2Fa5B6bbC0fCB27A781580ddF6271";
+  const galadrielBridgeAddress = "0x6f7153684c057e6c0b07a3DD32DA95eDCE7Ead8b";
 
   const sepoliaProvider = new ethers.JsonRpcProvider(
     process.env.SEPOLIA_URL as string
@@ -27,18 +26,18 @@ async function main() {
 
   const SepoliaBridge = new ethers.Contract(
     sepoliaBridgeAddress,
-    SepoliaBridgeABI.abi,
+    BridgeABI.abi,
     sepoliaProvider
   ).connect(signer);
 
   const GaladrielBridge = new ethers.Contract(
     galadrielBridgeAddress,
-    GaladrielBridgeABI.abi,
+    BridgeABI.abi,
     galadrielProvider
   ).connect(signerGal);
   const galContract = new ethers.Contract(
     galadrielBridgeAddress,
-    GaladrielBridgeABI.abi,
+    BridgeABI.abi,
     signerGal
   );
   SepoliaBridge.on(
@@ -57,8 +56,7 @@ async function main() {
 
       if (targetChain === "Galadriel") {
         try {
-          //   console.log(await contract.admin());
-          const tx = await galContract.mintOnChain(targetAddress, amount);
+          const tx = await galContract.mintTokens(targetAddress, amount);
           await tx.wait();
           console.log(
             `Minted ${ethers.formatEther(
