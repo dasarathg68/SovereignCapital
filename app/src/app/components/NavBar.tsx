@@ -70,7 +70,7 @@ export const NavBar = () => {
           </div>
         </dialog>
         <button
-          className="btn btn-primary btn-sm ml-4 mr-4"
+          className="btn btn-primary btn-sm ml-2"
           onClick={() =>
             (document.getElementById("my_modal_3") as any).showModal()
           }
