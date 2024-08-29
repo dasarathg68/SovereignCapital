@@ -15,7 +15,7 @@ async function lockTokensOnSepolia() {
     "Galadriel",
     galadrielBridgeAddress,
     {
-      value: ethers.parseEther("0.001"),
+      value: ethers.parseEther("0.01"),
     }
   );
   await tx.wait();
