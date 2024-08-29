@@ -38,7 +38,12 @@ contract GaladrielBridge {
 
         emit BurnRequested(user, amount);
     }
-
+    function withdrawUserBalance(address user,uint256 amount) external onlyAdmin {
+            require(galBalance >= amount && amount<mintedTokens[user], "Insufficient contract balance");
+            galBalance -= amount;
+            mintedTokens[user] -= amount;
+            payable(user).transfer(amount);
+    }
     function withdraw(uint256 amount) external onlyAdmin {
         require(galBalance >= amount, "Insufficient contract balance");
         galBalance -= amount;
