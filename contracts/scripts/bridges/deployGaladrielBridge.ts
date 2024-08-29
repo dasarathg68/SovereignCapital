@@ -4,7 +4,7 @@ async function main() {
 
   console.log("Deploying contracts with the account:", deployer.address);
 
-  const initialGalBalance = ethers.parseEther("1"); // Specify the initial GAL balance to deposit during deployment
+  const initialGalBalance = ethers.parseEther("0.001"); // Specify the initial GAL balance to deposit during deployment
 
   const GaladrielBridge = await ethers.getContractFactory("GaladrielBridge");
   const galadrielBridge = await GaladrielBridge.deploy({
