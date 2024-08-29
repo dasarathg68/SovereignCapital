@@ -9,6 +9,7 @@ contract GaladrielBridge {
 
     event TokensMinted(address indexed user, uint256 amount);
     event TokensBurned(address indexed user, uint256 amount, string targetChain, address targetAddress);
+    event BurnRequested(address indexed user, uint256 amount);
 
     constructor() payable {
         admin = msg.sender;
@@ -32,7 +33,12 @@ contract GaladrielBridge {
         emit TokensBurned(msg.sender, amount, targetChain, targetAddress);
     }
 
-    // Function to withdraw GAL or equivalent from the contract
+    function requestBurn(address user, uint256 amount) external onlyAdmin {
+        require(mintedTokens[user] >= amount, "Insufficient minted tokens");
+
+        emit BurnRequested(user, amount);
+    }
+
     function withdraw(uint256 amount) external onlyAdmin {
         require(galBalance >= amount, "Insufficient contract balance");
         galBalance -= amount;

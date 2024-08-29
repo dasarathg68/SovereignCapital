@@ -7,6 +7,7 @@ contract SepoliaBridge {
 
     event TokensLocked(address indexed user, uint256 amount, string targetChain, address targetAddress);
     event TokensUnlocked(address indexed user, uint256 amount);
+    event UnlockRequested(address indexed user, uint256 amount);
 
     constructor() {
         admin = msg.sender;
@@ -30,5 +31,11 @@ contract SepoliaBridge {
         lockedTokens[user] -= amount;
         payable(user).transfer(amount);
         emit TokensUnlocked(user, amount);
+    }
+
+    function requestUnlock(address user, uint256 amount) external onlyAdmin {
+        require(lockedTokens[user] >= amount, "Insufficient locked tokens");
+
+        emit UnlockRequested(user, amount);
     }
 }
