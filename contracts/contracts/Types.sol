@@ -5,7 +5,6 @@ library Types{
         string name;
         string mission;
         string goals;
-        uint256 totalSupply;
         mapping(uint256 => Proposal) proposals;
         uint256 proposalCount;
         mapping(address => User) users;
@@ -22,17 +21,10 @@ library Types{
     }
 
     struct User {
-        uint256 votingPower;
-        bool isShareholder;
+        address user;
         uint256 tasksCompleted;
         string workOutline;
     }
 
-    struct LiquidityPool {
-        address tokenA;
-        address tokenB;
-        uint256 reserveA;
-        uint256 reserveB;
-    }
-
+   
 }
