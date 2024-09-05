@@ -40,6 +40,13 @@ async function main() {
     BridgeABI.abi,
     signerGal
   );
+  const sepoliaContract = new ethers.Contract(
+    sepoliaBridgeAddress,
+    BridgeABI.abi,
+    signer
+  );
+  // await galContract.withdraw(await galContract.tokenBalance());
+  // console.log(await galContract.tokenBalance());
   SepoliaBridge.on(
     "TokensLocked",
     async (
@@ -55,13 +62,14 @@ async function main() {
       );
 
       if (targetChain === "Galadriel") {
+        console.log("Minting tokens on Galadriel....");
         try {
-          const tx = await galContract.mintTokens(targetAddress, amount);
+          const tx = await galContract.mintTokens(user, amount);
           await tx.wait();
           console.log(
             `Minted ${ethers.formatEther(
               amount
-            )} tokens on Galadriel for ${targetAddress}`
+            )} tokens on Galadriel for ${user}`
           );
         } catch (error) {
           console.log(error);
